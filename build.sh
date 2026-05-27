@@ -10,7 +10,7 @@ cmake -S . -B build -G Ninja
 cd build
 ninja
 
-if [[ -e $EXE_FILENAME ]]; then
+if [[ $? -eq 0 ]]; then
 	echo -e "Executing\n\n"
 	./$EXE_FILENAME
 else

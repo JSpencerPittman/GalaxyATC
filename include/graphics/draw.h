@@ -5,11 +5,11 @@
 
 #include "graphics/texture.h"
 
-void Draw_CircleOnTexture
+void Draw_Square
     (
     Texture * texture,
     Coord2D pos,
-    uint32_t color_rgba,
+    ColorRGBA color_rgba,
     uint32_t radius
     );
 

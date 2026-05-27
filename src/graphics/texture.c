@@ -10,7 +10,7 @@ struct TextureInternal
 Texture * Texture_CreateFullscreen( SDL_Renderer * renderer, Size2D screen_size )
 {
     TextureInternal * internal = (TextureInternal*)malloc(sizeof(TextureInternal));
-    internal->texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, screen_size.w, screen_size.h );
+    internal->texture = SDL_CreateTexture( renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_STREAMING, screen_size.w, screen_size.h );
     internal->pixels = NULL;
     internal->pitch = 0;
 
@@ -40,9 +40,16 @@ void Texture_Unlock( Texture * texture )
     texture->is_locked = false;
     }
 
-void Texture_WritePixel( Texture * texture, Coord2D pos, ColorRGBA color )
+void Texture_WriteCell( Texture * texture, Coord2D pos, ColorRGBA color )
     {
     // TODO: Verify is locked
     uint32_t pixelIdx = texture->size.w * pos.y + pos.x;
     memcpy(&(((uint32_t*)texture->internal->pixels)[pixelIdx]), &color, sizeof(uint32_t));
+    }
+
+void Texture_WriteRow( Texture * texture, Coord2D start_pos, uint32_t cnt, ColorRGBA color )
+    {
+    uint32_t startPixelIdx = texture->size.w * start_pos.y + start_pos.x;
+    for( size_t idx = startPixelIdx; idx < startPixelIdx + cnt; ++idx )
+        memcpy(&(((uint32_t*)texture->internal->pixels)[idx]), &color, sizeof(uint32_t));
     }

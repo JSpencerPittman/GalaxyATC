@@ -19,6 +19,7 @@ void Texture_Destroy( Texture * texture );
 void Texture_Lock( Texture * texture );
 void Texture_Unlock( Texture * texture );
 
-void Texture_WritePixel( Texture * texture, Coord2D pos, ColorRGBA color );
+void Texture_WriteCell( Texture * texture, Coord2D pos, ColorRGBA color );
+void Texture_WriteRow( Texture * texture, Coord2D start_pos, uint32_t cnt, ColorRGBA color );
 
 #endif

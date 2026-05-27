@@ -4,6 +4,7 @@
 
 #include <SDL.h>
 
+#include "graphics/draw.h"
 #include "graphics/texture.h"
 
 static Size2D s_screen_size = { .w = 800, .h = 600 };
@@ -14,20 +15,22 @@ static void DrawSquareUsingTexture
 	) 
 	{
     const ColorRGBA white = { 0xFF, 0xFF, 0xFF, 0xFF };
+    const ColorRGBA red = { 0xFF, 0x00, 0x00, 0xFF };
     Texture * texture;
     Coord2D pos;
 
     texture = Texture_CreateFullscreen( renderer, s_screen_size );
     Texture_Lock( texture );
     
+    pos.x = 0;
     for( uint32_t r = 0; r < s_screen_size.h/2; ++r )
         {
-        for( uint32_t c = 0; c < s_screen_size.w; ++c )
-            {
-            pos.x = c; pos.y = r;
-            Texture_WritePixel( texture, pos, white );
-            }
+        pos.y = r;
+        Texture_WriteRow( texture, pos, s_screen_size.w, white );
         }
+
+    Coord2D sqPos = { .x = 20, .y = 20 };
+    Draw_Square( texture, sqPos, red, 5 );
 
     Texture_Unlock( texture );
     Texture_Destroy( texture );

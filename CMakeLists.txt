@@ -8,13 +8,16 @@ set(CMAKE_GENERATOR "Ninja")
 project(GalaxyATC VERSION 1.0)
 
 find_package(SDL2 REQUIRED)
-get_property(all_targets DIRECTORY . PROPERTY BUILDSYSTEM_TARGETS)
-message(STATUS "Targets: ${all_targets}")
+find_package(SDL2_ttf REQUIRED)
 
 file(GLOB_RECURSE SOURCES src/*.c)
 
 add_executable(GalaxyATC ${SOURCES})
 
+add_custom_command(
+    TARGET GalaxyATC PRE_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/resources ${CMAKE_BINARY_DIR}/resources)
+
 target_include_directories(GalaxyATC PUBLIC include)
 
-target_link_libraries(GalaxyATC PUBLIC SDL2::SDL2)
+target_link_libraries(GalaxyATC PUBLIC SDL2::SDL2 SDL2_ttf::SDL2_ttf)

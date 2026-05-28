@@ -3,11 +3,32 @@
 #include <stdbool.h>
 
 #include <SDL.h>
+#include <SDL_ttf.h>
 
 #include "graphics/draw.h"
 #include "graphics/texture.h"
 
 static Size2D s_screen_size = { .w = 800, .h = 600 };
+
+static void DrawText
+    (
+    SDL_Renderer * renderer
+    )
+    {
+    TTF_Font* Sans = TTF_OpenFont("resources/fonts/Debrosee-ALPnL.ttf", 24);
+    SDL_Color White = {255, 255, 255};
+    SDL_Surface* surfaceMessage = TTF_RenderText_Solid(Sans, "put your text here", White); 
+    SDL_Texture* Message = SDL_CreateTextureFromSurface(renderer, surfaceMessage);
+    SDL_Rect Message_rect;
+    Message_rect.x = 0;
+    Message_rect.y = 0; 
+    Message_rect.w = 200;
+    Message_rect.h = 100; 
+    SDL_RenderCopy(renderer, Message, NULL, &Message_rect);
+    SDL_FreeSurface(surfaceMessage);
+    SDL_DestroyTexture(Message);
+    SDL_RenderPresent(renderer);
+    }
 
 static void DrawSquareUsingTexture
 	(
@@ -57,6 +78,13 @@ static void DrawSquareUsingTexture
 
 int main()
 {
+    if(TTF_Init() < 0)
+        {
+        printf("SDL TTL could not be initialized!\n"
+               "SDL_ERROR: %s\n", SDL_GetError());
+        return 0;
+        }
+
     if(SDL_Init(SDL_INIT_VIDEO) < 0)
     {
         printf("SDL could not be initialized!\n"
@@ -100,7 +128,8 @@ int main()
                 SDL_SetRenderDrawColor(renderer, 0x00, 0x00, 0x00, 0x00);
                 SDL_RenderClear(renderer);
 
-				DrawSquareUsingTexture(renderer);
+				// DrawSquareUsingTexture(renderer);
+                DrawText(renderer);
             }
 
             SDL_DestroyRenderer(renderer);

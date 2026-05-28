@@ -4,8 +4,9 @@
 #include <stdint.h>
 
 #include "graphics/texture.h"
+#include "utility.h"
 
-void Draw_Square
+ResultStatus Draw_Square
     (
     Texture * texture,
     Coord2D pos,

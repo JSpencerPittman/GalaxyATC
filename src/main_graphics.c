@@ -14,26 +14,45 @@ static void DrawSquareUsingTexture
 	SDL_Renderer * renderer
 	) 
 	{
-    const ColorRGBA white = { 0xFF, 0xFF, 0xFF, 0xFF };
-    const ColorRGBA red = { 0xFF, 0x00, 0x00, 0xFF };
     Texture * texture;
     Coord2D pos;
 
-    texture = Texture_CreateFullscreen( renderer, s_screen_size );
+    /*----------------------- 
+    Left
+    -----------------------*/
+
+    const Rect layout_left = { .x = 0, .y = 0, .w = s_screen_size.w/2, .h=s_screen_size.h };
+
+    texture = Texture_Create( renderer, layout_left );
     Texture_Lock( texture );
     
-    pos.x = 0;
-    for( uint32_t r = 0; r < s_screen_size.h/2; ++r )
-        {
-        pos.y = r;
-        Texture_WriteRow( texture, pos, s_screen_size.w, white );
-        }
-
-    Coord2D sqPos = { .x = 20, .y = 20 };
-    Draw_Square( texture, sqPos, red, 5 );
+    Texture_Fill( texture, COLOR_BLUE );
 
     Texture_Unlock( texture );
+
+    Texture_CopyToRenderingTarget( renderer, texture );
+
     Texture_Destroy( texture );
+
+    /*----------------------- 
+    Right
+    -----------------------*/
+
+    const Rect layout_right = { .x = s_screen_size.w/2, .y = 0, .w = s_screen_size.w/2, .h=s_screen_size.h };
+
+    texture = Texture_Create( renderer, layout_right );
+    Texture_Lock( texture );
+    
+    Texture_Fill( texture, COLOR_GREEN );
+
+    Texture_Unlock( texture );
+
+    Texture_CopyToRenderingTarget( renderer, texture );
+
+    Texture_Destroy( texture );
+    
+    SDL_RenderPresent(renderer);
+
 	}
 
 int main()
@@ -45,7 +64,7 @@ int main()
         return 0;
     }
 
-    SDL_Window *window = SDL_CreateWindow("Basic C SDL project",
+    SDL_Window *window = SDL_CreateWindow("GalaxyATC",
                                           SDL_WINDOWPOS_UNDEFINED,
                                           SDL_WINDOWPOS_UNDEFINED,
                                           s_screen_size.w, s_screen_size.h,
@@ -57,7 +76,8 @@ int main()
     }
     else
     {
-        SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        SDL_SetHint(SDL_HINT_RENDER_DRIVER, "software");
+        SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, 0);
         if(!renderer)
         {
             printf("Renderer could not be created!\n"
@@ -81,8 +101,6 @@ int main()
                 SDL_RenderClear(renderer);
 
 				DrawSquareUsingTexture(renderer);
-
-                SDL_RenderPresent(renderer);
             }
 
             SDL_DestroyRenderer(renderer);

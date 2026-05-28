@@ -5,21 +5,24 @@
 #include <SDL.h>
 
 #include "graphics/types.h"
+#include "utility.h"
 
 typedef struct TextureInternal TextureInternal;
 
 typedef struct {
     TextureInternal * internal;
-    Size2D size;
+    Rect layout;
     bool is_locked;
 } Texture;
 
-Texture * Texture_CreateFullscreen( SDL_Renderer * renderer, Size2D screen_size );
-void Texture_Destroy( Texture * texture );
-void Texture_Lock( Texture * texture );
-void Texture_Unlock( Texture * texture );
+Texture * Texture_Create( SDL_Renderer * const renderer, Rect layout );
+void Texture_Destroy( Texture * const texture );
+void Texture_Lock( Texture * const texture );
+void Texture_Unlock( Texture * const texture );
+void Texture_CopyToRenderingTarget( SDL_Renderer * const renderer, Texture * const texture );
 
-void Texture_WriteCell( Texture * texture, Coord2D pos, ColorRGBA color );
-void Texture_WriteRow( Texture * texture, Coord2D start_pos, uint32_t cnt, ColorRGBA color );
+ResultStatus Texture_WriteCell( Texture * const texture, Coord2D pos, ColorRGBA color );
+ResultStatus Texture_WriteRow( Texture * const texture, Coord2D start_pos, uint32_t cnt, ColorRGBA color );
+ResultStatus Texture_Fill( Texture * const texture, ColorRGBA color );
 
 #endif
